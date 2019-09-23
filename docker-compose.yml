@@ -1,0 +1,106 @@
+version: '2'
+
+#volumes:
+# папка для Oxidized-Node-Managment
+#  Oxidized-Node-Managment: {}
+
+services:
+  oxidized:
+    container_name: "${PROJECT_NAME}_OXIDIZED"
+    hostname: oxidized
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+#      - ${HTTP_IP_PORT}:8888/tcp
+      - ${HTTP_IP_PORT}:80/tcp
+      - ${HTTP_IP_PORT_MANAGER}:4567/tcp
+#      - ${OXIDIZEDMANAGER_HTTP_IP_PORT_PORT}:80/tcp
+    environment:
+      CONFIG_RELOAD_INTERVAL: 30
+#    volumes:
+#     - "${DATAFOLDER_PATH}/Oxidized-Node-Managment:/home/oxidized/"
+
+
+
+#     - "${DATAFOLDER_PATH}/oxodized:/root/.config/oxidized"
+
+#     - "${FOLDER_PATH}/code:/code"
+#     - "/Oxidized-Node-Managment"
+#     - "/code"
+
+#  web:
+#    container_name: "${PROJECT_NAME}_WEB"
+#    hostname: oxidized_web
+#    image: nginx:latest
+#    ports:
+##     - "8889:80"
+#     - ${OXIDIZEDMANAGER_HTTP_IP_PORT_PORT}:80/tcp
+##192.168.100.239:8889
+##     - "8082:80"
+#    volumes:
+##     - ./code:/code
+##     - Oxidized-Node-Managment:/code:ro
+##     - "${FOLDER_PATH}/code:/code"
+#     - "${FOLDER_PATH}/site.conf:/etc/nginx/conf.d/default.conf"
+#    volumes_from:
+#      - oxidized
+
+#        networks:
+#            - code-network
+#  php:
+#    container_name: "${PROJECT_NAME}_PHP"
+#    hostname: oxidized_php
+##    image: php:fpm
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile_php-fpm
+
+#    volumes_from:
+#      - oxidized
+#    volumes:
+#     - ./code:/code
+#        networks:
+#            - code-network
+
+#networks:
+#    code-network:
+#        driver: bridge
+
+
+
+
+
+
+
+
+#  docker-php-nginx:
+#    container_name: "${PROJECT_NAME}_OXIDIZED-MANAGER"
+#    hostname: php-nginx
+#    restart: always
+#    image: trafex/alpine-nginx-php7
+##    image: skiychan/nginx-php7
+#    ports:
+#      - ${OXIDIZEDMANAGER_HTTP_IP_PORT_PORT}/tcp
+#    volumes:
+#     - "${FOLDER_PATH}/Oxidized-Node-Managment-master:/var/www/html"
+#     - "${FOLDER_PATH}/Oxidized-Node-Managment-master:/data/wwwroot"
+
+#  docker-php-nginx:
+#    container_name: "${PROJECT_NAME}_OXIDIZED-MANAGER"
+#    hostname: php-nginx
+#    restart: always
+#    build:
+#       context: docker-php-nginx
+#       dockerfile: Dockerfile
+#    ports:
+#      - 8889:8080/tcp
+
+
+#  image:  trafex/alpine-nginx-php7
+#    environment:
+#      CONFIG_RELOAD_INTERVAL: 30
+#  volumes:
+#    - "${OXIDIZED}:/root/.config/oxidized"
+

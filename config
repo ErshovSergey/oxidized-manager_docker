@@ -1,0 +1,50 @@
+username: username
+password: password
+model: junos
+interval: 3600
+log: /home/oxidized/.config/oxidized/log
+debug: false
+threads: 30
+timeout: 20
+retries: 3
+prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
+rest: 127.0.0.1:8888
+vars: {}
+groups: {}
+input:
+  default: ssh, telnet
+  debug: /tmp/oxidized-debug
+  ssh:
+    secure: false
+output:
+  default: git
+  git:
+    user: oxidized
+    email: oxidized@my-server.local
+    repo: /home/oxidized/network-config
+source:
+  default: sql
+  csv:
+    file: /home/oxidized/.config/oxidized/router.conf
+    delimiter: !ruby/regexp /:/
+    map:
+      name: 0
+      model: 1
+      username: 2
+      password: 3
+    vars_map:
+      enable: 4
+    sql:
+      adapter: sqlite
+      database: /home/oxidized/.config/router.db
+      table: devices
+      map:
+        name: address
+        model: type
+        username: username
+        password: password
+      vars_map:
+        enable: enable
+model_map:
+  cisco: ios
+  juniper: junos
