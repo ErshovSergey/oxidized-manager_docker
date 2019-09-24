@@ -13,7 +13,8 @@ vars: {}
 groups: {}
 input:
   default: ssh, telnet
-  debug: /tmp/oxidized-debug
+#  debug: /tmp/oxidized-debug
+  debug: true
   ssh:
     secure: false
 output:
@@ -24,27 +25,35 @@ output:
     repo: /home/oxidized/network-config
 source:
   default: sql
-  csv:
-    file: /home/oxidized/.config/oxidized/router.conf
-    delimiter: !ruby/regexp /:/
+  sql:
+    adapter: sqlite
+#    database: /home/oxidized/.config/router.db
+    database: /home/oxidized/oxidized-manager/router.db
+    table: devices
     map:
-      name: 0
-      model: 1
-      username: 2
-      password: 3
+      name: fqdn
+      model: model
+      username: username
+      password: password
     vars_map:
-      enable: 4
-    sql:
-      adapter: sqlite
-      database: /home/oxidized/.config/router.db
-      table: devices
-      map:
-        name: address
-        model: type
-        username: username
-        password: password
-      vars_map:
-        enable: enable
+      enable: enable
+
+#    map:
+#      group: group
+#      name: name
+#      ip: ip
+#      model: model
+#      ssh_port: ssh_port
+#      ssh_proxy: ssh_proxy
+#      username: username
+#      password: password
+#      vars_map:
+#      enable: enable
 model_map:
   cisco: ios
   juniper: junos
+
+
+
+
+
