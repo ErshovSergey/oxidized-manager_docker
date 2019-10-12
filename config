@@ -37,9 +37,6 @@ output:
     email: o@example.com
     repo: "/home/oxidized/.config/oxidized/git"
 
-#  default: file
-#  file:
-#    directory: "/home/oxidized/.config/oxidized/configs"
 source:
   default: csv
   csv:
@@ -53,6 +50,14 @@ source:
       password: 4
     vars_map:
       enable: 5
+      group: 6
+      ssh_port: 7
+
 model_map:
-  juniper: junos
+  mikrotik: routeros
   cisco: ios
+  juniper: junos
+  hp: procurve, comware
+  datacom: datacom
+  huawei: vrp
+  ubiquiti: airos, edgeswitch
