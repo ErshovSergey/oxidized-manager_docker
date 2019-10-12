@@ -1,59 +1,58 @@
+---
 username: username
 password: password
 model: junos
+resolve_dns: true
 interval: 3600
-log: /home/oxidized/.config/oxidized/log
+use_syslog: false
 debug: false
 threads: 30
 timeout: 20
 retries: 3
 prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
-rest: 127.0.0.1:8888
+#rest: 127.0.0.1:8888
+rest: 0.0.0.0:8888
+next_adds_job: false
 vars: {}
 groups: {}
+models: {}
+pid: "/home/oxidized/.config/oxidized/pid"
+crash:
+  directory: "/home/oxidized/.config/oxidized/crashes"
+  hostnames: false
+stats:
+  history_size: 10
 input:
   default: ssh, telnet
-#  debug: /tmp/oxidized-debug
-  debug: true
+  debug: false
   ssh:
     secure: false
+  ftp:
+    passive: true
+  utf8_encoded: true
 output:
   default: git
   git:
-    user: oxidized
-    email: oxidized@my-server.local
-    repo: /home/oxidized/network-config
+    user: Oxidized
+    email: o@example.com
+    repo: "/home/oxidized/.config/oxidized/git"
+
+#  default: file
+#  file:
+#    directory: "/home/oxidized/.config/oxidized/configs"
 source:
-  default: sql
-  sql:
-    adapter: sqlite
-#    database: /home/oxidized/.config/router.db
-    database: /home/oxidized/oxidized-manager/router.db
-    table: devices
+  default: csv
+  csv:
+    file: "/home/oxidized/.config/oxidized/router.db"
+    delimiter: !ruby/regexp /:/
     map:
-      name: fqdn
-      model: model
-      username: username
-      password: password
+      name: 0
+      ip: 1
+      model: 2
+      username: 3
+      password: 4
     vars_map:
-      enable: enable
-
-#    map:
-#      group: group
-#      name: name
-#      ip: ip
-#      model: model
-#      ssh_port: ssh_port
-#      ssh_proxy: ssh_proxy
-#      username: username
-#      password: password
-#      vars_map:
-#      enable: enable
+      enable: 5
 model_map:
-  cisco: ios
   juniper: junos
-
-
-
-
-
+  cisco: ios
