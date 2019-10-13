@@ -36,9 +36,11 @@ PIDFILE=/var/run/$NAME.pid
 do_start()
 {
 #        start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile  \
+	echo
 	mkdir -p /home/oxidized/.config/oxidized/
-	[ -f "/home/oxidized/.config/oxidized/config" ] || cp /home/oxidized/.config/oxidized.default/config /home/oxidized/.config/oxidized/
-	[ -f "/home/oxidized/.config/oxidized/router.db" ] || cp /home/oxidized/.config/oxidized.default/router.db /home/oxidized/.config/oxidized/
+	[ -f "/home/oxidized/.config/oxidized/config" ] || ( cp /home/oxidized/.config/oxidized.default/config /home/oxidized/.config/oxidized/ && echo '  Copy default "config"' )
+	[ -f "/home/oxidized/.config/oxidized/router.db.sql" ] || ( cp /home/oxidized/.config/oxidized.default/router.db.sql /home/oxidized/.config/oxidized/ && echo '  Copy default "router.db.sql"' )
+
 	chown -R oxidized /home/oxidized/
 
         start-stop-daemon --start --pidfile $PIDFILE --make-pidfile  \

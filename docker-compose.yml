@@ -10,7 +10,7 @@ services:
     hostname: oxidized
     restart: always
     build:
-      context: ./
+      context: ./oxidized/
       dockerfile: Dockerfile
     ports:
       - ${HTTP_IP_PORT_OXIDIZED}:8888/tcp

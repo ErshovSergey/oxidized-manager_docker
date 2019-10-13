@@ -12,7 +12,7 @@ RUN cd /tmp/ \
 RUN cd /tmp/ \
   && apt-get -qqy install ruby ruby-dev libsqlite3-dev libssl-dev pkg-config cmake libssh2-1-dev libicu-dev zlib1g-dev g++ \
 # понадобятся позже
-  && apt-get -qqy install sudo git 
+  && apt-get -qqy install sudo git sqlite3
 
 
 #RUN cd /tmp/ \
@@ -39,12 +39,13 @@ RUN apt-get install -yqq --no-install-recommends \
 COPY oxidized.init.d /etc/init.d/oxidized
 # файлы по умолчанию
 RUN mkdir -p /home/oxidized/.config/oxidized.default/
-COPY config router.db /home/oxidized/.config/oxidized.default/
+COPY config router.db.sql /home/oxidized/.config/oxidized.default/
 
-CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+#CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+CMD exec /bin/bash -c "/etc/init.d/oxidized start"
 
-RUN apt-get install -yqq --no-install-recommends \
-  sqlite3 libpq-dev libmariadbclient-dev-compat
+#RUN apt-get install -yqq --no-install-recommends \
+#  sqlite3 libpq-dev libmariadbclient-dev-compat
 
 #apt-get -y install \
 #     sudo ruby-dev libssl-dev pkg-config \
