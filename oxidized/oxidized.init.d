@@ -35,14 +35,16 @@ PIDFILE=/var/run/$NAME.pid
 
 do_start()
 {
-#        start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile  \
 	echo
 	mkdir -p /home/oxidized/.config/oxidized/
 	[ -f "/home/oxidized/.config/oxidized/config" ] || ( cp /home/oxidized/.config/oxidized.default/config /home/oxidized/.config/oxidized/ && echo '  Copy default "config"' )
 	[ -f "/home/oxidized/.config/oxidized/router.db.sql" ] || ( cp /home/oxidized/.config/oxidized.default/router.db.sql /home/oxidized/.config/oxidized/ && echo '  Copy default "router.db.sql"' )
 
 	chown -R oxidized /home/oxidized/
+	rm -rf /home/oxidized/.config/oxidized/pid
+	/etc/init.d/auto-reload-config.runit &
 
+#        start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile  \
         start-stop-daemon --start --pidfile $PIDFILE --make-pidfile  \
         --oknodo --chuid $USER --exec $DAEMON -- -c $CONFIG $ARGS
 }

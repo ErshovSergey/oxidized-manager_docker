@@ -8,19 +8,12 @@ RUN cd /tmp/ \
   && apt-get update -qqy \
   && apt-get dist-upgrade -yq 
 
-## установка oxidized ##
 RUN cd /tmp/ \
   && apt-get -qqy install ruby ruby-dev libsqlite3-dev libssl-dev pkg-config cmake libssh2-1-dev libicu-dev zlib1g-dev g++ \
-# понадобятся позже
-  && apt-get -qqy install sudo git sqlite3
+  && apt-get -qqy install sudo git sqlite3 curl nginx
 
-
-#RUN cd /tmp/ \
-#  && gem install oxidized \
-#  && gem install oxidized-script oxidized-web
 RUN cd /tmp/ \
   && gem install  --no-ri --no-rdoc --no-document oxidized oxidized-script oxidized-web sequel sqlite3
-########################
 
 
 ## 3
@@ -34,12 +27,12 @@ RUN cd /tmp/ \
 RUN apt-get install -yqq --no-install-recommends \
         telnet nano
 
-#RUN mkdir -p /home/oxidized/.config/oxidized/ \
-#  && chown -R oxidized /home/oxidized/.config/oxidized/
 COPY oxidized.init.d /etc/init.d/oxidized
+COPY auto-reload-config.runit /etc/init.d/
 # файлы по умолчанию
 RUN mkdir -p /home/oxidized/.config/oxidized.default/
 COPY config router.db.sql /home/oxidized/.config/oxidized.default/
+COPY oxidized.nginx /etc/nginx/sites-enabled/default
 
 #CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 CMD exec /bin/bash -c "/etc/init.d/oxidized start"
