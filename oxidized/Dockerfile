@@ -19,10 +19,19 @@ RUN cd /tmp/ \
 ## 3
 RUN cd /tmp/ \
   && useradd --shell /sbin/nologin -m oxidized \
-## 4
+## 4 Clone the oxidized-manager repository
   && cd /home/oxidized \
   && sudo -u oxidized -H git clone https://github.com/justinjahn/oxidized-manager.git 
 
+RUN cd /tmp/ \
+  && gem install bundler --no-document 
+
+RUN cd /tmp/ \
+  && cd /home/oxidized/oxidized-manager \
+  && chown -R oxidized /home/oxidized/oxidized-manager \
+  && sudo -u oxidized -H  bundle install --path vendor/bundle \
+  && bundle install --without development \
+  && bundle update
 
 RUN apt-get install -yqq --no-install-recommends \
         telnet nano
@@ -36,6 +45,9 @@ COPY oxidized.nginx /etc/nginx/sites-enabled/default
 
 #CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 CMD exec /bin/bash -c "/etc/init.d/oxidized start"
+
+
+
 
 #RUN apt-get install -yqq --no-install-recommends \
 #  sqlite3 libpq-dev libmariadbclient-dev-compat
@@ -59,14 +71,11 @@ CMD exec /bin/bash -c "/etc/init.d/oxidized start"
 #  && gem update --system 
 #RUN cd /tmp/ \
 #  && bundle install --without development
-#  && bundle install --without development
 #  && bundle update 
 
 #RUN cd /tmp/ \
 #  && gem pristine rake
 
-#RUN cd /tmp/ \
-#  && gem install bundler --no-document 
 #RUN cd /tmp/ \
 #  && gem install oxidized oxidized-script oxidized-web sequel sqlite3 puma --no-document \
 #  && gem install oxidized-script oxidized-web sequel sqlite3

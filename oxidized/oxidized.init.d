@@ -37,12 +37,20 @@ do_start()
 {
 	echo
 	mkdir -p /home/oxidized/.config/oxidized/
+# файлы по умолчанию если не существуют
 	[ -f "/home/oxidized/.config/oxidized/config" ] || ( cp /home/oxidized/.config/oxidized.default/config /home/oxidized/.config/oxidized/ && echo '  Copy default "config"' )
 	[ -f "/home/oxidized/.config/oxidized/router.db.sql" ] || ( cp /home/oxidized/.config/oxidized.default/router.db.sql /home/oxidized/.config/oxidized/ && echo '  Copy default "router.db.sql"' )
+	[ -f "/home/oxidized/oxidized-manager/config/config.yml" ] || ( cp /home/oxidized/oxidized-manager/config/config.yml.dist /home/oxidized/oxidized-manager/config/config.yml && echo '  Copy default "router.db.sql"' )
 
+# подготовка
 	chown -R oxidized /home/oxidized/
 	rm -rf /home/oxidized/.config/oxidized/pid
-	/etc/init.d/auto-reload-config.runit &
+# автоматическая перезагрузка
+#	/etc/init.d/auto-reload-config.runit &
+
+# старт oxidized-manager
+	cd /home/oxidized/oxidized-manager \
+	  && /usr/bin/env bundle exec puma -e production--pidfile/home/oxidized/oxidized-manager.pid &
 
 #        start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile  \
         start-stop-daemon --start --pidfile $PIDFILE --make-pidfile  \
