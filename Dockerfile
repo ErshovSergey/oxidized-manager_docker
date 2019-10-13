@@ -43,6 +43,9 @@ COPY config router.db /home/oxidized/.config/oxidized.default/
 
 CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 
+RUN apt-get install -yqq --no-install-recommends \
+  sqlite3 libpq-dev libmariadbclient-dev-compat
+
 #apt-get -y install \
 #     sudo ruby-dev libssl-dev pkg-config \
 #     cmake libssh2-1-dev libicu-dev zlib1g-dev g++ \
