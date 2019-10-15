@@ -1,6 +1,7 @@
 # oxidized-manager_docker
 oxidized-manager_docker
 
+docker-compose up --build -d --remove-orphans --force-recreate
 
 
 
