@@ -9,7 +9,7 @@ RUN cd /tmp/ \
   && apt-get dist-upgrade -yq 
 
 RUN cd /tmp/ \
-  && apt-get -qqy install ruby ruby-dev libsqlite3-dev libssl-dev pkg-config cmake libssh2-1-dev libicu-dev zlib1g-dev g++ \
+  && apt-get -qqqy install ruby ruby-dev libsqlite3-dev libssl-dev pkg-config cmake libssh2-1-dev libicu-dev zlib1g-dev g++ \
   && apt-get -qqy install sudo git sqlite3 curl nginx
 
 RUN cd /tmp/ \
@@ -38,10 +38,13 @@ RUN apt-get install -yqq --no-install-recommends \
 
 COPY oxidized.init.d /etc/init.d/oxidized
 COPY auto-reload-config.runit /etc/init.d/
+
 # файлы по умолчанию
-RUN mkdir -p /home/oxidized/.config/oxidized.default/
-COPY config router.db.sql /home/oxidized/.config/oxidized.default/
+#RUN mkdir -p /home/oxidized/.config/oxidized.default/
+COPY config router.db.sql config.yml /home/oxidized/.config/oxidized/
 COPY oxidized.nginx /etc/nginx/sites-enabled/default
+
+RUN cp -r /home/oxidized /home/oxidized.default
 
 #CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 CMD exec /bin/bash -c "/etc/init.d/oxidized start"

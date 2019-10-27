@@ -36,25 +36,29 @@ PIDFILE=/var/run/$NAME.pid
 do_start()
 {
 	echo
-	mkdir -p /home/oxidized/.config/oxidized/
+	cp -r /home/oxidized.default/*                /home/oxidized/ && echo '  Copy folder "oxidized"'
 # файлы по умолчанию если не существуют
-	[ -f "/home/oxidized/.config/oxidized/config" ] || ( cp /home/oxidized/.config/oxidized.default/config /home/oxidized/.config/oxidized/ && echo '  Copy default "config"' )
-	[ -f "/home/oxidized/.config/oxidized/router.db.sql" ] || ( cp /home/oxidized/.config/oxidized.default/router.db.sql /home/oxidized/.config/oxidized/ && echo '  Copy default "router.db.sql"' )
-	[ -f "/home/oxidized/oxidized-manager/config/config.yml" ] || ( cp /home/oxidized/oxidized-manager/config/config.yml.dist /home/oxidized/oxidized-manager/config/config.yml && echo '  Copy default "router.db.sql"' )
+	[ -f "/home/oxidized/.config/oxidized/config" ] || ( cp /home/oxidized.default/.config/oxidized/config                /home/oxidized/.config/oxidized/ && echo '  Copy default "config"' )
+	[ -f "/home/oxidized/.config/oxidized/router.db.sql" ] || ( cp /home/oxidized.default/.config/oxidized/router.db.sql  /home/oxidized/.config/oxidized/ && echo '  Copy default "router.db.sql"' )
+	[ -f "/home/oxidized/oxidized-manager/config/config.yml" ] || ( cp /home/oxidized.default/.config/oxidized/config.yml /home/oxidized/oxidized-manager/config/config.yml && echo '  Copy default "config.yml"' )
 
 # подготовка
 	chown -R oxidized /home/oxidized/
-	rm -rf /home/oxidized/.config/oxidized/pid
+	rm -rf /home/oxidized/.config/oxidized/pid $PIDFILE /home/oxidized/oxidized-manager.pid
 # автоматическая перезагрузка
 #	/etc/init.d/auto-reload-config.runit &
 
 # старт oxidized-manager
 	cd /home/oxidized/oxidized-manager \
-	  && /usr/bin/env bundle exec puma -e production--pidfile/home/oxidized/oxidized-manager.pid &
+	  && sudo -u oxidized -H bash -c "/usr/bin/env bundle exec puma -e production --pidfile /home/oxidized/oxidized-manager.pid &"
 
-#        start-stop-daemon --start --quiet --background --pidfile $PIDFILE --make-pidfile  \
-        start-stop-daemon --start --pidfile $PIDFILE --make-pidfile  \
-        --oknodo --chuid $USER --exec $DAEMON -- -c $CONFIG $ARGS
+#	  && /usr/bin/env bundle exec puma -e production --pidfile /home/oxidized/oxidized-manager.pid &
+
+# старт oxidized
+        start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile  \
+#        --oknodo --chuid $USER --exec $DAEMON -- -c $CONFIG $ARGS
+         start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile  \
+        --oknodo --chuid $USER --exec $DAEMON -- $ARGS
 }
 
 do_stop()

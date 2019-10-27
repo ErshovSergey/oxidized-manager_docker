@@ -13,8 +13,8 @@ services:
       context: ./oxidized/
       dockerfile: Dockerfile
     ports:
-#      - ${HTTP_IP_PORT_OXIDIZED}:8888/tcp
-      - ${HTTP_IP_PORT_OXIDIZED}:80/tcp
+      - ${HTTP_IP_PORT_OXIDIZED}:8888/tcp
+#      - ${HTTP_IP_PORT_OXIDIZED}:80/tcp
       - ${HTTP_IP_PORT_OXIDIZED_MANAGER}:4567/tcp
     environment:
       CONFIG_RELOAD_INTERVAL: 30
